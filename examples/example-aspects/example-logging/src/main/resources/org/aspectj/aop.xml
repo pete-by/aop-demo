@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aspectj>
+    <weaver options="-verbose -showWeaveInfo"> <!-- -debug -->
+        <!-- only weave classes in our application-specific packages/classes -->
+        <!-- <include within="com.axamit"/> -->
+    </weaver>
+    <aspects>
+        <aspect name="com.axamit.aop.logging.aspects.CustomLoggingAspect" />
+    </aspects>
+</aspectj>

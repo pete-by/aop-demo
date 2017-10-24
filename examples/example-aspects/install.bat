@@ -1,0 +1,1 @@
+mvn -Dmaven.test.skip=true -DskipTest=true -PautoInstallBundle clean install

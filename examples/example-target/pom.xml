@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ |  Copyright 2015 Adobe Systems Incorporated
+ |
+ |  Licensed under the Apache License, Version 2.0 (the "License");
+ |  you may not use this file except in compliance with the License.
+ |  You may obtain a copy of the License at
+ |
+ |      http://www.apache.org/licenses/LICENSE-2.0
+ |
+ |  Unless required by applicable law or agreed to in writing, software
+ |  distributed under the License is distributed on an "AS IS" BASIS,
+ |  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ |  See the License for the specific language governing permissions and
+ |  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.axamit.aop</groupId>
+        <artifactId>examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>example-target</artifactId>
+    <packaging>bundle</packaging>
+    <name>Examples - Weaving Target</name>
+    <description>AOP in AEM Research</description>
+
+    <properties>
+        <aem-uber-jar.version>6.2.0</aem-uber-jar.version>
+        <servlet-api.version>2.4</servlet-api.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.osgi.service.component,
+                            org.osgi.framework,
+                            org.apache.sling.api.*,
+                            javax.servlet,
+                            org.slf4j
+                        </Import-Package>
+                        <Require-Bundle>
+                            <!-- Required dependencies unless added via getDynamicImports.add(...)
+                             com.axamit.aop.aspects,
+                             org.apache.servicemix.bundles.aspectj;visibility:="reexport"
+                            -->
+                            <!-- TODO: REQUIRED for Around advice until can add dynamic import to generated inner closure classes-->
+
+                        </Require-Bundle>
+                        <Export-Package>
+                            com.axamit.aop.target,
+                            com.axamit.aop.target.exported,
+                            com.axamit.aop.target.servlets
+                        </Export-Package>
+                        <Private-Package>com.axamit.aop.target.hidden.impl</Private-Package>
+                        <!-- Import any version of javax.inject, to allow running on multiple versions of AEM -->
+                        <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+                        <Embed-Directory>OSGI-INF/lib</Embed-Directory>
+                        <Embed-Transitive>true</Embed-Transitive>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- OSGi Dependencies -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>biz.aQute.bnd</groupId>
+            <artifactId>bndlib</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.aspectj</artifactId>
+        </dependency>
+
+        <!-- Only needed for DemoServlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aem</groupId>
+            <artifactId>uber-jar</artifactId>
+            <classifier>apis</classifier>
+            <version>${aem-uber-jar.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Logging Dependencies -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>
